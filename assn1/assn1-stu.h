@@ -2,6 +2,9 @@
 #define __ASSN1_STU_H__
 
 #include "assn1.h"
+#include <iostream>
+
+using namespace std;
 
 template <size_t N> void NANDGate<N>::advanceCycle()
 {
@@ -20,16 +23,47 @@ template <size_t N> void NANDGate<N>::advanceCycle()
     {
         (*_output)[i] = result[i];
     }
+    // cout << (*_output) << "\n" << endl;
 }
 
 template <size_t N> void SignedAdder<N>::advanceCycle()
 {
-    /* FIXME */
+    std::bitset<N> result(0);
+
+    bool carry = false;
+
+    for (size_t i = 0; i < N; ++i)
+    {
+        // cout << typeid((*_inputs[0])[i]).name() << endl;
+
+        result[i] = (*_inputs[0])[i] ^ (*_inputs[1])[i] ^ carry;
+
+        carry = ((*_inputs[0])[i] && (*_inputs[1])[i]) || (((*_inputs[0])[i] || (*_inputs[1])[i]) && carry);
+    }
+
+    for (size_t i = 0; i < N; ++i)
+    {
+        (*_output)[i] = result[i];
+    }
 }
 
 template <size_t N> void SignedSubtractor<N>::advanceCycle()
 {
-    /* FIXME */
+    std::bitset<N> result(0);
+
+    bool borrow = false;
+
+    for (size_t i = 0; i < N; ++i)
+    {
+        result[i] = (*_inputs[0])[i] ^ (*_inputs[1])[i] ^ borrow;
+
+        borrow = (!(*_inputs[0])[i] && (*_inputs[1])[i]) || (result[i] && borrow);
+    }
+
+    for (size_t i = 0; i < N; ++i)
+    {
+        (*_output)[i] = result[i];
+    }
 }
 
 template <size_t N> void LogicalUnit<N>::advanceCycle()
