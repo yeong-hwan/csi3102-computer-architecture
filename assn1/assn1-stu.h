@@ -34,8 +34,6 @@ template <size_t N> void SignedAdder<N>::advanceCycle()
 
     for (size_t i = 0; i < N; ++i)
     {
-        // cout << typeid((*_inputs[0])[i]).name() << endl;
-
         result[i] = (*_inputs[0])[i] ^ (*_inputs[1])[i] ^ carry;
 
         carry = ((*_inputs[0])[i] && (*_inputs[1])[i]) || (((*_inputs[0])[i] || (*_inputs[1])[i]) && carry);
@@ -68,7 +66,68 @@ template <size_t N> void SignedSubtractor<N>::advanceCycle()
 
 template <size_t N> void LogicalUnit<N>::advanceCycle()
 {
-    /* FIXME */
+    std::bitset<N> result(0);
+    unsigned int peration_code = (*_operation).to_ulong();
+
+    // cout << peration_code << endl;
+
+    switch (peration_code)
+    {
+    // AND
+    case 0:
+        for (size_t i = 0; i < N; ++i)
+        {
+            result[i] = (*_inputs[0])[i] & (*_inputs[1])[i];
+        }
+        break;
+    // OR
+    case 1:
+        for (size_t i = 0; i < N; ++i)
+        {
+            result[i] = (*_inputs[0])[i] | (*_inputs[1])[i];
+        }
+        break;
+    // XOR
+    case 2:
+        for (size_t i = 0; i < N; ++i)
+        {
+            result[i] = (*_inputs[0])[i] ^ (*_inputs[1])[i];
+        }
+        break;
+    // NOT
+    case 3:
+        for (size_t i = 0; i < N; ++i)
+        {
+            result[i] = !(*_inputs[0])[i];
+        }
+        break;
+    // NAND
+    case 4:
+        for (size_t i = 0; i < N; ++i)
+        {
+            result[i] = !((*_inputs[0])[i] & (*_inputs[1])[i]);
+        }
+        break;
+    // NOR
+    case 5:
+        for (size_t i = 0; i < N; ++i)
+        {
+            result[i] = !((*_inputs[0])[i] | (*_inputs[1])[i]);
+        }
+        break;
+    // NOR
+    case 6:
+        for (size_t i = 0; i < N; ++i)
+        {
+            result[i] = !((*_inputs[0])[i] ^ (*_inputs[1])[i]);
+        }
+        break;
+    }
+
+    for (size_t i = 0; i < N; ++i)
+    {
+        (*_output)[i] = result[i];
+    }
 }
 
 template <size_t N, size_t M> void HashTable<N, M>::advanceCycle()
