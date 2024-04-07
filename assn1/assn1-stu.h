@@ -154,7 +154,28 @@ template <size_t N, size_t M> void HashTable<N, M>::advanceCycle()
 
 template <size_t N, size_t D> void DelayQueue<N, D>::advanceCycle()
 {
-    /* FIXME */
+    *_output = _entries[D - 1];
+
+    // Push input to the queue if isPush signal is set
+    if ((*_isPush).to_ulong())
+    {
+        for (size_t i = D - 1; i > 0; --i)
+        {
+            _entries[i] = (_entries[i - 1]);
+        }
+
+        _entries[0] = (*_input);
+    }
+    else
+    {
+        for (size_t i = D - 1; i > 0; --i)
+        {
+            _entries[i] = (_entries[i - 1]);
+        }
+
+        std::bitset<N> blank(0);
+        _entries[0] = blank;
+    }
 }
 
 #endif
