@@ -132,7 +132,24 @@ template <size_t N> void LogicalUnit<N>::advanceCycle()
 
 template <size_t N, size_t M> void HashTable<N, M>::advanceCycle()
 {
-    /* FIXME */
+    // Extract index value
+    unsigned int index_value = (*_index).to_ulong();
+
+    // Check if isWrite signal is set
+    bool is_write = (*_isWrite).to_ulong();
+
+    if (is_write)
+    {
+        // Update the specified entry with input data
+        _entries[index_value] = (*_input);
+        // Output 0
+        *_output = (unsigned long long)0;
+    }
+    else
+    {
+        // Output the value of the specified entry
+        *_output = (_entries[index_value]);
+    }
 }
 
 template <size_t N, size_t D> void DelayQueue<N, D>::advanceCycle()
