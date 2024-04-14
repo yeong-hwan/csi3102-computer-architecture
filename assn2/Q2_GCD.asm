@@ -20,7 +20,28 @@ calculateGCD:
 ################################################################################
 # FIXME
 
-  nop
+  # Set up initial values
+  move $t0, $a0      # $t0 = $a0
+  move $t1, $a1      # $t1 = $a1
+
+  gcd_loop:
+    # Check if $t1 is 0, if so, $t0 contains the GCD
+    beq $t1, $zero, gcd_done
+
+    # Calculate remainder: $t0 % $t1 and store it in $t2
+    divu $t0, $t1
+    mfhi $t2           # Remainder is stored in $t2
+
+    # Update $t0 to $t1 and $t1 to the remainder ($t2)
+    move $t0, $t1      # $t0 = $t1
+    move $t1, $t2      # $t1 = $t2
+
+    # Repeat the loop
+    j gcd_loop
+
+gcd_done:
+    # GCD is in $t0, store it in $v0
+    move $v0, $t0
 
 # FIXME
 ################################################################################
