@@ -101,53 +101,52 @@ recursiveInsertionSort:
 
   #####################################
   # FIXME
+ 
+  
+  #####################################
+# FIXME
 
-  # Check if the size of the array N is <= 1
-  bgt $s0, 1, sort_more  # If N > 1, continue to sort
-  j recursiveInsertionSort_exit  # If N <= 1, exit (base case)
+# Check if the size of the array N is <= 1
+blez $s0, recursiveInsertionSort_exit  # If N <= 1, exit (base case)
 
-sort_more:
-  # Recursive call to sort the first N-1 elements
-  addi $a0, $s0, -1  # N - 1
-  move $a1, $s1
-  jal recursiveInsertionSort
+# Recursive call to sort the first N-1 elements
+addi $a0, $s0, -1  # N - 1
+move $a1, $s1
+jal recursiveInsertionSort
 
-  # $s0 still holds N, $s1 holds the address of the array
-  # Find the correct position for the last element, array[N-1]
-  addi $a0, $s1, -4  # Move $a0 to the last element
-  add $a0, $a0, $s0  # Should multiply $s0 by 4 first before adding to base address
-  sll $t1, $s0, 2    # $t1 = $s0 * 4 (shift left by 2 is equivalent to multiplying by 4)
-  add $a0, $s1, $t1  # Get the address of the last element
-  addi $a0, $a0, -4  # Adjust by 4 bytes to point to the last element
+# Retrieve the last element to be inserted
+sll $t1, $s0, 2          # Calculate the offset for the last element
+add $a0, $s1, $t1        # Calculate address of the last element
+addi $a0, $a0, -4
+lw $t0, 0($a0)           # Load the last element
 
-
-  # Initialize j = 2
-  li $t1, 2
+# Initialize j to N-2, as index for the last sorted element
+addi $t1, $s0, -2
 
 insert_loop:
-  # Check if j <= N and array[N-j] > x
-  sll $t2, $t1, 2     # j*4
-  sub $t2, $s1, $t2   # Address of array[N-j] = base - j*4
-  lw $t3, 0($t2)      # Load array[N-j]
-  blt $t1, $s0, continue_check  # Ensure j <= N
-  j insert_done       # If j > N, we're done
-
-continue_check:
-  bgt $t3, $t0, shift_element  # If array[N-j] > x, shift it
-  j insert_done       # Otherwise, we're done shifting
+  sll $t2, $t1, 2         # t2 = j*4, offset for array[j]
+  add $a0, $s1, $t2       # Address of array[j]
+  lw $t2, 0($a0)          # Load array[j]
+  bltz $t1, insert_done   # If j < 0, we found the insertion point
+  bge $t2, $t0, shift_element # If array[j] >= x, continue shifting
+  j insert_done           # Otherwise, stop shifting
 
 shift_element:
-  addi $t2, $t2, 4    # Move to array[N-j+1]
-  sw $t3, 0($t2)      # array[N-j+1] = array[N-j]
-  addi $t1, $t1, 1    # Increment j
+  addi $a0, $a0, 4        # Address of array[j+1]
+  sw $t2, 0($a0)          # Shift array[j] to array[j+1]
+  addi $t1, $t1, -1       # Decrement j
   j insert_loop
 
 insert_done:
-  sll $t3, $t1, 2     # j*4
-  sub $t2, $s1, $t3   # Correct place to insert x
-  sw $t0, 0($t2)      # Place x at array[N-j+1]
+  addi $t1, $t1, 1        # Increment j to point to the correct insertion index
+  sll $t2, $t1, 2         # t2 = j*4, compute the correct offset
+  add $a0, $s1, $t2       # Address where to insert x
+  sw $t0, 0($a0)          # Insert the last element at the correct position
 
+# FIXME
+#####################################
 
+ 
   # FIXME
   #####################################
 
