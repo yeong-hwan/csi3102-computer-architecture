@@ -20,7 +20,7 @@ strv0:
 
 array0:
   .align 4
-  .word 1,2,3,4,5,6,7,8
+  .word 1, 2, 3, 4, 5, 6, 7, 8
 
 ################################################################################
 
@@ -130,13 +130,39 @@ binarySearch0:
   # $v0 = $s3
   move $v0, $s3
 
-################################################################################
-# FIXME
+  #################################
+  # FIXME
 
-  nop
+  # check if $t0 >= $t1 (end loop if true)
+  bge $t0, $t1, binarySearch1
+  # calculate middle index k = ($t0 + $t1) / 2
+  add $t2, $t0, $t1
+  sra $t2, $t2, 1   # Shift right by 1 is equivalent to division by 2
 
-# FIXME
-################################################################################
+  # Load the value at index k
+  sll $t3, $t2, 2   # Multiply by 4 to get the correct byte address offset
+  add $t3, $s1, $t3 # $t3 now points to array[k]
+  lw $t3, 0($t3)    # Load the value from array[k]
+
+  # Compare array[k] with M ($s2)
+  bgt $t3, $s2, update_t1
+  blt $t3, $s2, update_t0
+  # if array[k] == M, set $v0 to k and break
+  move $v0, $t2
+  j binarySearch1
+
+update_t0:
+  # if array[k] < M, set $t0 to k + 1
+  addi $t0, $t2, 1
+  j binarySearch0
+
+update_t1:
+  # if array[k] > M, set $t1 to k
+  move $t1, $t2
+  j binarySearch0
+
+  # FIXME
+  #################################
 
 binarySearch1:
 
