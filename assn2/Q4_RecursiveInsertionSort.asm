@@ -5,28 +5,28 @@ n0:
   .word 8
 array0:
   .align 4
-  .word 93,14,23,53,98,10,9,6
+  .word 93, 14, 23, 53, 98, 10, 9, 6
 
 n1:
   .align 4
   .word 10
 array1:
   .align 4
-  .word 10,9,8,7,6,5,4,3,2,1
+  .word 10, 9, 8, 7, 6, 5, 4, 3, 2, 1
 
 n2:
   .align 4
   .word 10
 array2:
   .align 4
-  .word 10,-9,8,-7,6,-5,4,-3,2,-1
+  .word 10, -9, 8, -7, 6, -5, 4, -3, 2, -1
 
 n3:
   .align 4
   .word 4
 array3:
   .align 4
-  .word 1,2,3,4
+  .word 1, 2, 3, 4
 
 newline:
   .asciiz "\n"
@@ -99,13 +99,57 @@ recursiveInsertionSort:
   move $a1, $s1
   jal printArray
 
-################################################################################
-# FIXME
+  #####################################
+  # FIXME
 
-  nop
+  # Check if the size of the array N is <= 1
+  bgt $s0, 1, sort_more  # If N > 1, continue to sort
+  j recursiveInsertionSort_exit  # If N <= 1, exit (base case)
 
-# FIXME
-################################################################################
+sort_more:
+  # Recursive call to sort the first N-1 elements
+  addi $a0, $s0, -1  # N - 1
+  move $a1, $s1
+  jal recursiveInsertionSort
+
+  # $s0 still holds N, $s1 holds the address of the array
+  # Find the correct position for the last element, array[N-1]
+  addi $a0, $s1, -4  # Move $a0 to the last element
+  add $a0, $a0, $s0  # Should multiply $s0 by 4 first before adding to base address
+  sll $t1, $s0, 2    # $t1 = $s0 * 4 (shift left by 2 is equivalent to multiplying by 4)
+  add $a0, $s1, $t1  # Get the address of the last element
+  addi $a0, $a0, -4  # Adjust by 4 bytes to point to the last element
+
+
+  # Initialize j = 2
+  li $t1, 2
+
+insert_loop:
+  # Check if j <= N and array[N-j] > x
+  sll $t2, $t1, 2     # j*4
+  sub $t2, $s1, $t2   # Address of array[N-j] = base - j*4
+  lw $t3, 0($t2)      # Load array[N-j]
+  blt $t1, $s0, continue_check  # Ensure j <= N
+  j insert_done       # If j > N, we're done
+
+continue_check:
+  bgt $t3, $t0, shift_element  # If array[N-j] > x, shift it
+  j insert_done       # Otherwise, we're done shifting
+
+shift_element:
+  addi $t2, $t2, 4    # Move to array[N-j+1]
+  sw $t3, 0($t2)      # array[N-j+1] = array[N-j]
+  addi $t1, $t1, 1    # Increment j
+  j insert_loop
+
+insert_done:
+  sll $t3, $t1, 2     # j*4
+  sub $t2, $s1, $t3   # Correct place to insert x
+  sw $t0, 0($t2)      # Place x at array[N-j+1]
+
+
+  # FIXME
+  #####################################
 
 recursiveInsertionSort_exit:
 
