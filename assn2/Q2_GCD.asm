@@ -39,7 +39,7 @@ calculateGCD:
     # Repeat the loop
     j gcd_loop
 
-gcd_done:
+  gcd_done:
     # GCD is in $t0, store it in $v0
     move $v0, $t0
 
