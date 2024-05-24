@@ -42,7 +42,7 @@ class RegisterFile : public DigitalCircuit
             {
                 if (reg != 0)
                 {
-                    printf("INFO: $%02u <-- 0x%08lx\n", reg, (unsigned long)val);
+                    // printf("INFO: $%02u <-- 0x%08lx\n", reg, (unsigned long)val);
                     _registers[reg] = val;
                 }
             }
