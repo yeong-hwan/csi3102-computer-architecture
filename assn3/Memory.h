@@ -43,9 +43,8 @@ class Memory : public DigitalCircuit
             std::uint32_t addr, value;
             while (fscanf(initFile, " %x %x", &addr, &value) == 2)
             {
-                // printf("INFO: memory[0x%08lx..0x%08lx] <-- 0x%08lx\n", (unsigned long)addr, (unsigned long)(addr +
-                // 3),
-                //        (unsigned long)value);
+                printf("INFO: memory[0x%08lx..0x%08lx] <-- 0x%08lx\n", (unsigned long)addr, (unsigned long)(addr + 3),
+                       (unsigned long)value);
                 if (_endianness == LittleEndian)
                 {
                     _memory[addr + 0] = (std::uint8_t)(value % 0x100);
