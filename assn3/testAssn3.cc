@@ -88,7 +88,7 @@ void testALUControl()
     Wire<6> funct;
     Wire<4> operation;
     ALUControl *aluControl = new ALUControl(&aluOp, &funct, &operation);
-    fprintf(stderr, "INFO: testing ALUControl...\n");
+    fprintf(stderr, "\nINFO: testing ALUControl...\n");
 
     fprintf(stderr, "INFO: aluOp = 0x0 --> operation = 0x2\n");
     aluOp = 0;
@@ -155,7 +155,7 @@ void testControl()
     Control *control =
         new Control(&opcode, &regDst, &aluSrc, &memToReg, &regWrite, &memRead, &memWrite, &branch, &aluOp);
 
-    fprintf(stderr, "INFO: testing Control...\n");
+    fprintf(stderr, "\nINFO: testing Control...\n");
 
     fprintf(stderr, "INFO: opcode = 0x00 --> regDst = 1, aluSrc = 0, memToReg = 0,"
                     " regWrite = 1, memRead = 0, memWrite = 0, branch = 0, aluOp = 0x2\n");
@@ -224,7 +224,7 @@ void testRegisterFile()
     RegisterFile *regFile =
         new RegisterFile(&readRegister1, &readRegister2, &writeRegister, &writeData, &regWrite, &readData1, &readData2);
 
-    fprintf(stderr, "INFO: testing RegisterFile...\n");
+    fprintf(stderr, "\nINFO: testing RegisterFile...\n");
 
     fprintf(stderr, "INFO: regWrite = 1, writeRegister = 0x0, writeData = 0x01234567\n");
     regWrite = 1;
@@ -312,7 +312,7 @@ void testMemory()
     memoryLE = new Memory("MemoryLE", &address, &writeData, &memRead, &memWrite, &readData, Memory::LittleEndian);
     memoryBE = new Memory("MemoryBE", &address, &writeData, &memRead, &memWrite, &readData, Memory::BigEndian);
 
-    fprintf(stderr, "INFO: testing Memory...\n");
+    fprintf(stderr, "\nINFO: testing Memory...\n");
 
     fprintf(stderr, "INFO: memRead = 0, memWrite = 1, address = 0x1000, writeData = 0x01234567\n");
     memRead = 0;

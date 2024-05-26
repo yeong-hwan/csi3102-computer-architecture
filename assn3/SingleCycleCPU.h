@@ -25,7 +25,7 @@ template <size_t N> class MUX : public DigitalCircuit
 
     virtual void advanceCycle()
     {
-        /* FIXME */
+        *_oOutput = (_iSelect->to_ulong() == 1) ? *_iInput1 : *_iInput0;
     }
 
   private:
